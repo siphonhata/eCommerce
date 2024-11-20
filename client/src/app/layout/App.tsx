@@ -1,44 +1,40 @@
-import { useEffect, useState } from 'react'
-import { Product } from '../models/product';
-import Catalog from '../../features/catalog/catalog';
-import './styles.css'
+import Catalog from '../../features/catalog/catalog'; 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Typography } from '@mui/material';
+import Header from './Header';
+import { Container, createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
+import { useState } from 'react';
 
 
 function App() {
+  
+  const [darkMode, setDarkMode] = useState(false);
+  const paletteType = darkMode ? 'dark' : 'light';
 
-  const [products, setProducts] = useState<Product []>([]);
+  const theme = createTheme({
+    palette:{
+      mode: paletteType,
+      background: {
+        default: paletteType === 'light' ? '#eaeaea' : '#121212'
+      }
+    }
+  })
 
-  useEffect(() => {
-    fetch('http://localhost:5000/api/products')
-    .then(response => response.json())
-    .then(data => setProducts(data))
-  }, [])
-
-  function addProduct() {
-    setProducts(prevState => [...prevState, {
-      id: prevState.length + 101,
-      name: 'product' + (prevState.length +1),
-      price: (prevState.length *100) +100,
-      brand: "Some Bramd",
-      description: "Descr",
-      pictureUrl: "url"
-    }])
-      
-      
+  function handleThemeChange() {
+    setDarkMode(!darkMode);
   }
-
-
   return (
-    <div>
-      <Typography variant='h1'>Re-Store</Typography>
-      <Catalog products={products} addProduct={addProduct}/>
-      
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
+      <Container>
+        <Catalog />
+      </Container>
+    </ThemeProvider>
+
   )
 }
 
