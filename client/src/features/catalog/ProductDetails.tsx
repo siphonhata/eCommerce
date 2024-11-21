@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
+import agent from "../../app/api/agent";
 
 export default function ProductDetails() {
 
@@ -11,8 +12,8 @@ export default function ProductDetails() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/products/${id}`)
-            .then(response => setProduct(response.data))
+        id && agent.Catalog.details(parseInt(id))
+            .then(response => setProduct(response))
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
     }, [id])
@@ -21,7 +22,7 @@ export default function ProductDetails() {
 
     if (!product) return <h3>Product not found</h3>
 
-    return (
+    return ( 
         <Grid container spacing={6}>
             <Grid item xs={6}>
                 <img src={product.pictureUrl} alt={product.name} style={{width: '100%'}} />
