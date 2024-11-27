@@ -11,12 +11,14 @@ export default function Catalog() {
 
     useEffect(() => {
         agent.Catalog.list()
-        .then(products => setProducts(products))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false))
-    }, []) 
+            .then(products => {
+                setProducts(products)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+    }, [])
 
-    if (loading) return <LoadingComponent  message="Loading Products..."/>
+    if (loading) return <LoadingComponent message="Loading Products..." />
 
 
 
