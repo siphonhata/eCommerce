@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20241128211922_BasketEntityAdded")]
+    [Migration("20241206075214_BasketEntityAdded")]
     partial class BasketEntityAdded
     {
         /// <inheritdoc />
@@ -54,7 +54,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BasketsItems");
+                    b.ToTable("BasketItems");
                 });
 
             modelBuilder.Entity("API.Entities.Product", b =>
