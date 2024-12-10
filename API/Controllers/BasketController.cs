@@ -1,5 +1,7 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Basket>> GetBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
 
@@ -26,7 +28,20 @@ namespace API.Controllers
                 return NotFound();
             }
 
-            return basket;
+            return new BasketDto{
+                Id = basket.Id,
+                BuyerId = basket.BuyerId,
+                Items = basket.Items.Select(item => new BasketItemDto 
+                {
+                    ProductId = item.ProductId,
+                    Name =  item.Product.Name,
+                    Price = item.Product.Price,
+                    PictureUrl = item.Product.PictureUrl,
+                    Brand = item.Product.Brand,
+                    Type = item.Product.Type,
+                    Quantity = item.Quantity
+                }).ToList()
+            };
 
         }
 
@@ -37,10 +52,7 @@ namespace API.Controllers
         {
             var basket = await RetrieveBasket();
             
-            if (basket == null)
-            {
-                basket = CreateBasket();
-            }
+            basket ??= CreateBasket();
 
             var product = await _context.Products.FindAsync(productId);
             
@@ -67,7 +79,11 @@ namespace API.Controllers
 
         public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
         {
+            var basket = await RetrieveBasket();
 
+            if (basket == null) return NotFound();
+
+            
 
             return Ok();
         }
