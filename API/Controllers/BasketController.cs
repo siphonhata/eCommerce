@@ -89,7 +89,7 @@ namespace API.Controllers
         private Basket CreateBasket()
         {
             var buyerId = Guid.NewGuid().ToString();
-            var cookieOptions = new CookieOptions { IsEssential = true, Expires = DateTime.Now.AddDays(30) };
+            var cookieOptions = new CookieOptions { IsEssential = true, Expires = DateTime.Now.AddMinutes(2) };
             Response.Cookies.Append("buyerId", buyerId, cookieOptions);
             var basket = new Basket { BuyerId = buyerId };
             _context.Baskets.Add(basket);
